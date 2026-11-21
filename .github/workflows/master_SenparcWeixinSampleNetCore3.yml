@@ -32,22 +32,19 @@ jobs:
       with:
         dotnet-version: '6.0.100'
         
-
     - name: Set up .NET 7.0
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '7.0.302'
         
-    #- name: CMD1
-    #  run: dir 
-      #`n cd ./Samples/net6-mvc/ `n dir `n nuget restore `n msbuild /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="\published\"
-      
-    #- name: CMD2
-    #  run: cd ./Samples/net6-mvc/
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
 
-    #- name: CMD3
-    #  run: dir
-      
     - name: Restore NuGet packages
       run: nuget restore "./Samples/All/net7-mvc/"
       #-SolutionDirectory ./Samples/All/net7-mvc/
@@ -61,4 +58,4 @@ jobs:
     #    app-name: 'senparcweixinsamplenetcore3'
     #    slot-name: 'senparcweixinsamplenet5'
     #    publish-profile: ${{ secrets.AzureAppService_PublishProfile_3ee3a42f0a324bf7be968d8c232a8555 }}
-    #    package: \published\
+    #    package: \published\\
